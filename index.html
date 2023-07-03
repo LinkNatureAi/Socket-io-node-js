@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket.IO Chat</title>
+  <style>
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+    #messages li {
+      padding: 5px 10px;
+    }
+    #messages li:nth-child(odd) {
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <ul id="messages"></ul>
+  <form id="chat-form" action="">
+    <input id="message-input" autocomplete="off" />
+    <button>Send</button>
+  </form>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+  <script>
+    // Connect to the server
+    const socket = io();
+
+    // Handle form submission
+    const form = document.getElementById('chat-form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('message-input');
+      const message = input.value;
+      input.value = '';
+      socket.emit('chat message', message);
+    });
+
+    // Handle incoming messages
+    const messages = document.getElementById('messages');
+    socket.on('chat message', (msg) => {
+      const li = document.createElement('li');
+      li.textContent = msg;
+      messages.appendChild(li);
+    });
+  </script>
+</body>
+</html>
